@@ -1,5 +1,5 @@
 "use client"
-import { setdata } from '@/apicalled'
+import { setdata } from '@/components/Apicalled'
 import React, { useState } from 'react'
 
 const TodoApp = () => {

@@ -1,6 +1,6 @@
 "use client"
 
-import { Todo } from '@/apicalled'
+import { Todo } from '@/components/Apicalled'
 import React, { useEffect, useState } from 'react'
 import axios from "axios"
 
@@ -10,7 +10,7 @@ type Toggle = {
 const DisplayTodo = () => {
   const [posts, setposts] = useState([])
   const [visible, setvisible] = useState(false)
-  const [editid, seteditid] = useState(0)
+  const [editid, seteditid] = useState<number | undefined>(0)
   const [title,settitle]=useState("")
   
   const getdata = async () => {
@@ -27,12 +27,12 @@ const DisplayTodo = () => {
 
 
 
-  const handledelete = async (id: number) => {
+  const handledelete = async (id: number | undefined) => {
     await axios.delete(`https://stamurai.onrender.com/posts/${id}`)
 
 
   }
-  const handletoggle = async (id: number) => {
+  const handletoggle = async (id: number | undefined) => {
     let user = posts.filter((el, index) => {
       return el["id"] == id
     })
@@ -42,7 +42,7 @@ const DisplayTodo = () => {
     }
     await axios.patch(`https://stamurai.onrender.com/posts/${id}`, obj)
   }
-  const handleedit = (id: number) => {
+  const handleedit = (id: number | undefined) => {
     seteditid(id)
     setvisible(true)
   }
@@ -76,15 +76,16 @@ const DisplayTodo = () => {
           </tr>
           {
             posts && posts.map((el: Todo, index) => {
+              let newid=el.id
               return (
                 <tr key={el.id} className='border-solid border-2 border-black-600'>
                   <td>{index + 1}</td>
                   <td>{el.title}</td>
                   <td>{el.completed ? "Completed" : "Pending"}</td>
                   <td className='gap-x-5'>
-                    <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={(e) => handletoggle(el.id)}>Toggle</button>
-                    <button className=' bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={() => handleedit(el.id)} >Edit</button>
-                    <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={() => handledelete(el.id)}>Delete</button>
+                    <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={(e) => handletoggle(newid)}>Toggle</button>
+                    <button className=' bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={() => handleedit(newid)} >Edit</button>
+                    <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={() => handledelete(newid)}>Delete</button>
 
                   </td>
                 </tr>
